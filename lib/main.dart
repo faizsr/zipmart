@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:zipmart/src/core/styles/app_theme.dart';
+import 'package:zipmart/src/features/auth/presentation/pages/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,21 +9,13 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ZipMart',
-      home: const DashBoard(),
+      theme: AppTheme.light,
+      debugShowCheckedModeBanner: false,
+      home: const LoginPage(),
     );
-  }
-}
-
-class DashBoard extends StatelessWidget {
-  const DashBoard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }
