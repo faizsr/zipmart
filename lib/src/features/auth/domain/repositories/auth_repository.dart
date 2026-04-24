@@ -1,5 +1,7 @@
 import '../entities/user_entity.dart';
 
 abstract class AuthRepository {
-  Future<bool> login(UserEntity user);
+  Future<void> login(UserEntity user);
+  Future<bool> isLoggedIn();
+  Future<void> logout();
 }

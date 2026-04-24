@@ -6,7 +6,7 @@ class LoginUsecase {
 
   final AuthRepository _repository;
 
-  Future<bool> call(UserEntity user) {
+  Future<void> call(UserEntity user) {
     return _repository.login(user);
   }
 }

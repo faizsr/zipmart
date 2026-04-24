@@ -2,13 +2,16 @@ import '../../domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
   const UserModel({
-    required super.id,
+    super.id = '',
     required super.email,
     required super.password,
   });
 
-  factory UserModel.fromJson(UserModel user) {
-    return UserModel(id: 'u-001', email: user.email, password: user.password);
+  factory UserModel.fromStorage({
+    required String id,
+    required String email,
+  }) {
+    return UserModel(id: id, email: email, password: '');
   }
 
   UserEntity toEntity() {

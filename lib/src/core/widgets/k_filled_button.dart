@@ -32,6 +32,7 @@ class KFilledButton extends StatelessWidget {
         style: FilledButton.styleFrom(
           backgroundColor: bgColor,
           foregroundColor: fgColor,
+          disabledBackgroundColor: bgColor.withValues(alpha: 0.8),
           padding: padding ?? EdgeInsets.all(16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

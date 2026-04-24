@@ -9,7 +9,17 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource _localDataSource;
 
   @override
-  Future<bool> login(UserEntity user) {
-    return _localDataSource.login(user.toModel());
+  Future<bool> isLoggedIn() async {
+    return await _localDataSource.isLoggedIn();
+  }
+
+  @override
+  Future<void> login(UserEntity user) async {
+    await _localDataSource.login(user.toModel());
+  }
+
+  @override
+  Future<void> logout() {
+    return _localDataSource.logout();
   }
 }
