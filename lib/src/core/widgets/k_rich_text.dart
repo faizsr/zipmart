@@ -45,17 +45,21 @@ class KRichText extends StatelessWidget {
               TextSpan(
                 text: text1,
                 recognizer: TapGestureRecognizer()..onTap = onTap,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: AppColors.grey),
+                style:
+                    text1Style ??
+                    Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: AppColors.grey),
               ),
             if (text2.isNotEmpty)
               TextSpan(
                 text: text2,
                 recognizer: TapGestureRecognizer()..onTap = onTap,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: AppColors.blue),
+                style:
+                    text2Style ??
+                    Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: AppColors.blue),
               ),
           ],
         ),

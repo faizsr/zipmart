@@ -99,14 +99,14 @@ class _LoginPageState extends State<LoginPage> {
                                       ?.copyWith(color: AppColors.grey),
                                 ),
                                 vSpace40,
-                                KTextField(
+                                AuthTextField(
                                   controller: _emailController,
                                   hintText: 'Email Address',
                                   validator: InputValidator.email,
                                   keyboardType: TextInputType.emailAddress,
                                 ),
                                 vSpace16,
-                                KTextField(
+                                AuthTextField(
                                   isPassword: true,
                                   hintText: 'Password',
                                   controller: _passwordController,

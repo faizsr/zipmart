@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:zipmart/src/core/constants/app_constants.dart';
 import 'package:zipmart/src/core/styles/app_colors.dart';
 
-class KTextField extends StatefulWidget {
-  const KTextField({
+class AuthTextField extends StatefulWidget {
+  const AuthTextField({
     super.key,
     this.canRequestFocus = true,
     this.title = '',
@@ -51,10 +51,10 @@ class KTextField extends StatefulWidget {
   final void Function()? onTap;
 
   @override
-  State<KTextField> createState() => _KTextFieldState();
+  State<AuthTextField> createState() => _AuthTextFieldState();
 }
 
-class _KTextFieldState extends State<KTextField> {
+class _AuthTextFieldState extends State<AuthTextField> {
   bool obscure = false;
 
   void onEyePressed() => setState(() => obscure = !obscure);
