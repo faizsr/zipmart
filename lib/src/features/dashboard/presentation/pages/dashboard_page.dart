@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/ep.dart';
 import 'package:zipmart/src/config/router/app_routes.dart';
 import 'package:zipmart/src/core/constants/app_assets.dart';
 import 'package:zipmart/src/core/constants/app_constants.dart';
@@ -10,12 +8,12 @@ import 'package:zipmart/src/core/styles/app_colors.dart';
 import 'package:zipmart/src/core/utils/responsive_helper.dart';
 import 'package:zipmart/src/core/widgets/k_filled_button.dart';
 import 'package:zipmart/src/features/auth/presentation/bloc/bloc/auth_bloc.dart';
-import 'package:zipmart/src/features/cart/presentation/bloc/cart/cart_bloc.dart';
 import 'package:zipmart/src/features/dashboard/presentation/bloc/dashboard/dashboard_bloc.dart';
 import 'package:zipmart/src/features/dashboard/presentation/widgets/dashboard_banner.dart';
 import 'package:zipmart/src/features/dashboard/presentation/widgets/dashboard_header.dart';
 import 'package:zipmart/src/features/dashboard/presentation/widgets/dashboard_product_card.dart';
 import 'package:zipmart/src/features/dashboard/presentation/widgets/dashboard_product_card_skelton.dart';
+import 'package:zipmart/src/features/dashboard/presentation/widgets/floating_cart_banner.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key, this.email});
@@ -74,7 +72,7 @@ class _DashboardPageState extends State<DashboardPage> {
             );
           },
         ),
-        bottomNavigationBar: _buildCartButton(context),
+        bottomNavigationBar: FloatingCartBanner(),
       ),
     );
   }
@@ -159,65 +157,6 @@ class _DashboardPageState extends State<DashboardPage> {
           return SizedBox();
         },
       ),
-    );
-  }
-
-  Widget _buildCartButton(BuildContext context) {
-    return BlocBuilder<CartBloc, CartState>(
-      builder: (context, state) {
-        final hasItems = state is CartLoadedState && state.cartItems.isNotEmpty;
-
-        return AnimatedSwitcher(
-          duration: Duration(milliseconds: 300),
-          reverseDuration: Duration(milliseconds: 300),
-          switchInCurve: Curves.elasticOut,
-          switchOutCurve: Curves.easeInBack,
-          transitionBuilder: (child, animation) {
-            return ScaleTransition(
-              scale: animation,
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          child: hasItems
-              ? GestureDetector(
-                  key: ValueKey('cart_button_visible'),
-                  onTap: () => context.push(AppRoutes.cart),
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(16, 16, 16, 24),
-                    padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
-                    decoration: BoxDecoration(
-                      color: AppColors.blue,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(height: 36, width: 1, color: AppColors.white),
-                        hSpace8,
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Your Cart',
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(color: AppColors.white),
-                            ),
-                            Text(
-                              '${state.cartItems.length} item',
-                              style: Theme.of(context).textTheme.labelMedium
-                                  ?.copyWith(color: AppColors.lightGrey),
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        Iconify(Ep.right, color: AppColors.white),
-                      ],
-                    ),
-                  ),
-                )
-              : SizedBox(key: ValueKey('cart_button_hidden')),
-        );
-      },
     );
   }
 }
