@@ -42,13 +42,6 @@ class DashboardBanner extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 children: List<Widget>.generate(3, (int index) {
-                  // return  Container(
-                  //   color: AppColors.lightGrey,
-                  //   child: Image(
-                  //     image: NetworkImage(bannerList[index]),
-                  //     fit: BoxFit.cover,
-                  //   ),
-                  // );
                   return CachedNetworkImage(
                     imageUrl: bannerList[index],
                     imageBuilder: (context, imageProvider) => Container(

@@ -51,7 +51,7 @@ class CartProductCard extends StatelessWidget {
               ),
               vSpace4,
               Text(
-                '\$${cartItem.product.price}',
+                '₹${cartItem.product.price}',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
