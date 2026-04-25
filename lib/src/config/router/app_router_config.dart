@@ -2,7 +2,6 @@ import 'package:go_router/go_router.dart';
 import 'package:zipmart/src/config/router/app_routes.dart';
 import 'package:zipmart/src/features/auth/presentation/pages/login_page.dart';
 import 'package:zipmart/src/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:zipmart/src/features/dashboard/presentation/pages/sliver_appbar_page.dart';
 import 'package:zipmart/src/features/splash/presentation/views/splash_page.dart';
 
 class AppRouterConfig {
@@ -20,10 +19,6 @@ class AppRouterConfig {
       GoRoute(
         path: AppRoutes.dashboard,
         builder: (context, state) => const DashboardPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.sliver,
-        builder: (context, state) => const CustomSliverAppBar(),
       ),
     ],
   );
