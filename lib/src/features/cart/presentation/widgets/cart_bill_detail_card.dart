@@ -20,7 +20,7 @@ class CartBillDetailCard extends StatelessWidget {
       builder: (context, state) {
         if (state is CartLoadedState) {
           final itemTotal = _calculateItemTotal(state.cartItems);
-          final deliveryFee = 5.0;
+          final deliveryFee = 50.0;
           final totalToPay = itemTotal + deliveryFee;
 
           return Container(
@@ -41,11 +41,7 @@ class CartBillDetailCard extends StatelessWidget {
                   '₹${itemTotal.toStringAsFixed(2)}',
                 ),
                 vSpace4,
-                _buildBillRow(
-                  context,
-                  'Delivery fee',
-                  '₹${deliveryFee.toStringAsFixed(2)}',
-                ),
+                _buildBillRow(context, 'Delivery fee', '₹$deliveryFee'),
                 Divider(color: AppColors.lightGrey),
                 vSpace4,
                 _buildBillRow(

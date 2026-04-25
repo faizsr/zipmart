@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:zipmart/src/core/constants/app_constants.dart';
 import 'package:zipmart/src/core/styles/app_colors.dart';
+import 'package:zipmart/src/core/utils/responsive_helper.dart';
 import 'package:zipmart/src/core/widgets/k_filled_button.dart';
 import 'package:zipmart/src/features/cart/presentation/bloc/cart/cart_bloc.dart';
 import 'package:zipmart/src/features/cart/presentation/widgets/cart_bill_detail_card.dart';
@@ -14,6 +15,8 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double w = ResponsiveHelper.getWidth(context);
+
     return Scaffold(
       backgroundColor: Color(0xFFf1f0f5),
       appBar: AppBar(
@@ -25,12 +28,54 @@ class CartPage extends StatelessWidget {
         titleSpacing: 0,
       ),
 
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [_buildCartSummary(context), vSpace16, CartBillDetailCard()],
+      body: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartLoadedState) {
+            if (state.cartItems.isEmpty) {
+              return _buildCartEmptyWidget(w, context);
+            }
+
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                _buildCartSummary(context),
+                vSpace16,
+                CartBillDetailCard(),
+              ],
+            );
+          }
+          return SizedBox();
+        },
       ),
 
       bottomNavigationBar: _buildDeliveryBar(context),
+    );
+  }
+
+  Widget _buildCartEmptyWidget(double w, BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: w / 2,
+            child: Image(image: AssetImage('assets/images/empty-cart.png')),
+          ),
+          Text(
+            'Your Cart is Currently Empty',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          vSpace4,
+          SizedBox(
+            width: w * 0.4,
+            child: KFilledButton(
+              text: 'Go Shopping',
+              padding: EdgeInsets.all(8),
+              onPressed: () => context.pop(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -83,22 +128,32 @@ class CartPage extends StatelessWidget {
   }
 
   Widget _buildDeliveryBar(BuildContext context) {
-    return Container(
-      color: AppColors.white,
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Deliver to:', style: Theme.of(context).textTheme.titleMedium),
-          Text(
-            'Kozhikode, Kerala, India',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          vSpace12,
-          KFilledButton(text: 'Proceed to Pay', onPressed: () {}),
-        ],
-      ),
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if (state is CartLoadedState && state.cartItems.isNotEmpty) {
+          return Container(
+            color: AppColors.white,
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Deliver to:',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                Text(
+                  'Kozhikode, Kerala, India',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                vSpace12,
+                KFilledButton(text: 'Proceed to Pay', onPressed: () {}),
+              ],
+            ),
+          );
+        }
+        return SizedBox();
+      },
     );
   }
 }

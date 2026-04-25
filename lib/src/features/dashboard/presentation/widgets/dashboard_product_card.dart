@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -49,13 +50,19 @@ class DashboardProductCard extends StatelessWidget {
         children: [
           AspectRatio(
             aspectRatio: 1,
+
             child: Container(
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppColors.lightGrey,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Image(image: NetworkImage(product.image)),
+              child: CachedNetworkImage(
+                imageUrl: product.image,
+                placeholder: (context, url) =>
+                    Container(color: AppColors.lightGrey),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
             ),
           ),
           vSpace12,
@@ -77,13 +84,14 @@ class DashboardProductCard extends StatelessWidget {
               ),
             ],
           ),
+          vSpace2,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               KRichText(
                 text1: '₹',
                 text2: '${product.price}',
-                text1Style: Theme.of(context).textTheme.titleMedium,
+                text1Style: Theme.of(context).textTheme.titleSmall,
                 text2Style: TextStyle(fontSize: 20, color: AppColors.black),
               ),
 

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -30,7 +31,12 @@ class CartProductCard extends StatelessWidget {
             color: AppColors.lightGrey,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Image(image: NetworkImage(cartItem.product.image)),
+          child: CachedNetworkImage(
+            imageUrl: cartItem.product.image,
+            placeholder: (context, url) =>
+                Container(color: AppColors.lightGrey),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+          ),
         ),
         hSpace8,
         Expanded(

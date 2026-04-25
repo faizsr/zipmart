@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:zipmart/src/core/constants/app_constants.dart';
 import 'package:zipmart/src/core/styles/app_colors.dart';
@@ -41,12 +42,26 @@ class DashboardBanner extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 children: List<Widget>.generate(3, (int index) {
-                  return Container(
-                    color: AppColors.lightGrey,
-                    child: Image(
-                      image: NetworkImage(bannerList[index]),
-                      fit: BoxFit.cover,
+                  // return  Container(
+                  //   color: AppColors.lightGrey,
+                  //   child: Image(
+                  //     image: NetworkImage(bannerList[index]),
+                  //     fit: BoxFit.cover,
+                  //   ),
+                  // );
+                  return CachedNetworkImage(
+                    imageUrl: bannerList[index],
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
+                    placeholder: (context, url) =>
+                        Container(color: AppColors.lightGrey),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   );
                 }),
               ),
