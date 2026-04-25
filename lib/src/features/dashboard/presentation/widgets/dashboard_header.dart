@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/gg.dart';
+import 'package:zipmart/src/config/router/app_routes.dart';
 import 'package:zipmart/src/core/constants/app_constants.dart';
 import 'package:zipmart/src/core/constants/app_icons.dart';
 import 'package:zipmart/src/core/styles/app_colors.dart';
@@ -97,9 +99,12 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                   ),
                 ],
               ),
-              CircleAvatar(
-                backgroundColor: foregroundColor,
-                child: Icon(CupertinoIcons.person_fill, color: backgroundColor),
+              GestureDetector(
+                onTap: () => context.push(AppRoutes.profile),
+                child: CircleAvatar(
+                  backgroundColor: foregroundColor,
+                  child: Icon(CupertinoIcons.person_fill, color: backgroundColor),
+                ),
               ),
             ],
           ),

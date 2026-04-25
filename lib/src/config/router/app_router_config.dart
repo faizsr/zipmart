@@ -3,6 +3,7 @@ import 'package:zipmart/src/config/router/app_routes.dart';
 import 'package:zipmart/src/features/auth/presentation/pages/login_page.dart';
 import 'package:zipmart/src/features/cart/presentation/pages/cart_page.dart';
 import 'package:zipmart/src/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:zipmart/src/features/profile/presenation/pages/profile_page.dart';
 import 'package:zipmart/src/features/splash/presentation/views/splash_page.dart';
 
 class AppRouterConfig {
@@ -24,6 +25,10 @@ class AppRouterConfig {
       GoRoute(
         path: AppRoutes.cart,
         builder: (context, state) => const CartPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.profile,
+        builder: (context, state) => const ProfilePage(),
       ),
     ],
   );
