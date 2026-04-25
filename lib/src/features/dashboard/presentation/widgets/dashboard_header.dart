@@ -53,6 +53,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
       pinned: true,
       toolbarHeight: 140,
       expandedHeight: 200,
+      backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,
       flexibleSpace: FlexibleSpaceBar(
         expandedTitleScale: 1,
