@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:zipmart/src/core/constants/app_assets.dart';
 import 'package:zipmart/src/core/constants/app_constants.dart';
 import 'package:zipmart/src/core/styles/app_colors.dart';
 import 'package:zipmart/src/core/utils/responsive_helper.dart';
@@ -59,7 +60,7 @@ class CartPage extends StatelessWidget {
         children: [
           SizedBox(
             width: w / 2,
-            child: Image(image: AssetImage('assets/images/empty-cart.png')),
+            child: Image(image: AssetImage(AppAssets.emptyCart)),
           ),
           Text(
             'Your Cart is Currently Empty',

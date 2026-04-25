@@ -129,6 +129,7 @@ class DashboardProductCard extends StatelessWidget {
                     onUpdateCartQuantity(cartItem!.quantity - 1, context);
                   },
                   child: Container(
+                    color: AppColors.lightGrey,
                     padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
                     child: Iconify(LineMd.minus, size: 16),
                   ),
@@ -147,7 +148,7 @@ class DashboardProductCard extends StatelessWidget {
                     onUpdateCartQuantity(cartItem!.quantity + 1, context);
                   },
                   child: Container(
-                    color: AppColors.transparent,
+                    color: AppColors.lightGrey,
                     padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
                     child: Iconify(LineMd.plus, size: 16),
                   ),
@@ -156,7 +157,7 @@ class DashboardProductCard extends StatelessWidget {
                 GestureDetector(
                   onTap: () => onUpdateCartQuantity(1, context),
                   child: Container(
-                    color: AppColors.transparent,
+                    color: AppColors.lightGrey,
                     padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
                     child: Iconify(LineMd.plus, size: 16),
                   ),

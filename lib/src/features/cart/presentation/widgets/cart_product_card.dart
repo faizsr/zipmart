@@ -77,6 +77,7 @@ class CartProductCard extends StatelessWidget {
               onUpdateCartQuantity(cartItem.quantity - 1, context);
             },
             child: Container(
+              color: AppColors.lightGrey,
               padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Iconify(LineMd.minus, size: 16),
             ),
@@ -95,7 +96,7 @@ class CartProductCard extends StatelessWidget {
               onUpdateCartQuantity(cartItem.quantity + 1, context);
             },
             child: Container(
-              color: AppColors.transparent,
+              color: AppColors.lightGrey,
               padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Iconify(LineMd.plus, size: 16),
             ),
