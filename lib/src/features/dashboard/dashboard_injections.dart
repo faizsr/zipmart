@@ -1,4 +1,5 @@
 import 'package:zipmart/src/config/di/injections.dart';
+import 'package:zipmart/src/features/cart/presentation/bloc/cart/cart_bloc.dart';
 import 'package:zipmart/src/features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import 'package:zipmart/src/features/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:zipmart/src/features/dashboard/domain/repositories/dashboard_repository.dart';
@@ -27,5 +28,9 @@ Future<void> initDashboardInjections() async {
       fetchCategoriesUsecase: sl(),
       fetchProductsUsecase: sl(),
     );
+  });
+  // Controller
+  sl.registerFactory(() {
+    return CartBloc();
   });
 }

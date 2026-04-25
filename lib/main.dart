@@ -4,6 +4,7 @@ import 'package:zipmart/src/config/di/injections.dart';
 import 'package:zipmart/src/config/router/app_router_config.dart';
 import 'package:zipmart/src/core/styles/app_theme.dart';
 import 'package:zipmart/src/features/auth/presentation/bloc/bloc/auth_bloc.dart';
+import 'package:zipmart/src/features/cart/presentation/bloc/cart/cart_bloc.dart';
 import 'package:zipmart/src/features/dashboard/presentation/bloc/dashboard/dashboard_bloc.dart';
 
 Future<void> main() async {
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => sl<AuthBloc>()),
         BlocProvider(create: (context) => sl<DashboardBloc>()),
+        BlocProvider(create: (context) => sl<CartBloc>()),
       ],
       child: MaterialApp.router(
         title: 'ZipMart',

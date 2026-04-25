@@ -6,6 +6,7 @@ import 'package:iconify_flutter/icons/ep.dart';
 import 'package:zipmart/src/config/router/app_routes.dart';
 import 'package:zipmart/src/core/styles/app_colors.dart';
 import 'package:zipmart/src/features/auth/presentation/bloc/bloc/auth_bloc.dart';
+import 'package:zipmart/src/features/cart/presentation/bloc/cart/cart_bloc.dart';
 import 'package:zipmart/src/features/dashboard/presentation/bloc/dashboard/dashboard_bloc.dart';
 import 'package:zipmart/src/features/dashboard/presentation/widgets/dashboard_banner.dart';
 import 'package:zipmart/src/features/dashboard/presentation/widgets/dashboard_header.dart';
@@ -87,41 +88,48 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget buildCartButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.push(AppRoutes.cart),
-      child: Container(
-        margin: EdgeInsets.fromLTRB(16, 16, 16, 24),
-        padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
-        decoration: BoxDecoration(
-          color: AppColors.blue,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Your Cart',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleMedium?.copyWith(color: AppColors.white),
-                ),
-                Text(
-                  '1 item',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: AppColors.white.withValues(alpha: 0.6),
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if (state is CartLoadedState && state.cartItems.isNotEmpty) {
+          return GestureDetector(
+            onTap: () => context.push(AppRoutes.cart),
+            child: Container(
+              margin: EdgeInsets.fromLTRB(16, 16, 16, 24),
+              padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
+              decoration: BoxDecoration(
+                color: AppColors.blue,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Your Cart',
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(color: AppColors.white),
+                      ),
+                      Text(
+                        '${state.cartItems.length} item',
+                        style: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(
+                              color: AppColors.white.withValues(alpha: 0.6),
+                            ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
 
-            Iconify(Ep.right, color: AppColors.white),
-          ],
-        ),
-      ),
+                  Iconify(Ep.right, color: AppColors.white),
+                ],
+              ),
+            ),
+          );
+        }
+        return SizedBox();
+      },
     );
   }
 }
