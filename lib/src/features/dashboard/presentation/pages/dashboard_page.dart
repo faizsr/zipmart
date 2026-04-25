@@ -1,19 +1,49 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ep.dart';
 import 'package:zipmart/src/config/router/app_routes.dart';
+import 'package:zipmart/src/core/constants/app_assets.dart';
+import 'package:zipmart/src/core/constants/app_constants.dart';
 import 'package:zipmart/src/core/styles/app_colors.dart';
-import 'package:zipmart/src/core/widgets/k_rich_text.dart';
+import 'package:zipmart/src/core/utils/responsive_helper.dart';
+import 'package:zipmart/src/core/widgets/k_filled_button.dart';
 import 'package:zipmart/src/features/auth/presentation/bloc/bloc/auth_bloc.dart';
+import 'package:zipmart/src/features/cart/presentation/bloc/cart/cart_bloc.dart';
+import 'package:zipmart/src/features/dashboard/presentation/bloc/dashboard/dashboard_bloc.dart';
+import 'package:zipmart/src/features/dashboard/presentation/widgets/dashboard_banner.dart';
+import 'package:zipmart/src/features/dashboard/presentation/widgets/dashboard_header.dart';
+import 'package:zipmart/src/features/dashboard/presentation/widgets/dashboard_product_card.dart';
+import 'package:zipmart/src/features/dashboard/presentation/widgets/dashboard_product_card_skelton.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key, this.email});
 
   final String? email;
 
   @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  final ScrollController _scrollController = ScrollController();
+
+  late DashboardBloc dashboardBloc;
+
+  @override
+  void initState() {
+    dashboardBloc = context.read<DashboardBloc>();
+    // fetch products and categories
+    dashboardBloc.add(FetchProductsEvent());
+    dashboardBloc.add(FetchCategoriesEvent());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    double w = ResponsiveHelper.getWidth(context);
+
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (previous, current) =>
           current is AuthStatus && !current.isLoggedIn,
@@ -21,73 +51,173 @@ class DashboardPage extends StatelessWidget {
         context.go(AppRoutes.login);
       },
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              backgroundColor: AppColors.blue,
-              foregroundColor: AppColors.white,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Padding(
-                  padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '21 Min',
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(
-                                    color: AppColors.white,
-                                    fontSize: 20,
-                                  ),
-                            ),
-                            KRichText(
-                              text1: 'To Home: ',
-                              text2: 'Kozhikode, Kerala, India',
-                              text1Style: Theme.of(context).textTheme.titleSmall
-                                  ?.copyWith(color: AppColors.white),
-                              text2Style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(color: AppColors.white),
-                            ),
-                          ],
-                        ),
-                        CircleAvatar(
-                          backgroundColor: AppColors.white,
-                          child: Icon(CupertinoIcons.person_fill),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+        extendBody: true,
+        body: BlocBuilder<DashboardBloc, DashboardState>(
+          builder: (context, state) {
+            return CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                DashboardHeader(),
 
-            SliverFillRemaining(
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 20,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(
-                        'Item $index',
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    );
-                  },
-                ),
+                if (state is DashboardFailed) ...[
+                  SliverToBoxAdapter(child: SizedBox(height: 120)),
+                  _buildErrorPlaceholder(w, context),
+                ] else ...[
+                  DashboardBanner(),
+
+                  _buildProductTitle(),
+                  _buildProductGridView(),
+
+                  SliverToBoxAdapter(child: SizedBox(height: 120)),
+                ],
+              ],
+            );
+          },
+        ),
+        bottomNavigationBar: _buildCartButton(context),
+      ),
+    );
+  }
+
+  SliverToBoxAdapter _buildErrorPlaceholder(double w, BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: w / 2,
+              child: Image(image: AssetImage(AppAssets.error)),
+            ),
+            Text(
+              'Something Went Wrong',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            vSpace4,
+            Text(
+              'Make sure internet is turned on and try again',
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.grey),
+            ),
+            vSpace8,
+            SizedBox(
+              width: w * 0.2,
+              child: KFilledButton(
+                text: 'Retry',
+                bgColor: AppColors.blue,
+                padding: EdgeInsets.all(8),
+                onPressed: () => context.pop(),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  SliverToBoxAdapter _buildProductTitle() {
+    return SliverToBoxAdapter(
+      child: BlocBuilder<DashboardBloc, DashboardState>(
+        builder: (context, state) {
+          if (state is DashboardLoaded || state is DashboardLoading) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 0, 8),
+              child: Text('Products', style: TextStyle(fontSize: 20)),
+            );
+          }
+          return SizedBox();
+        },
+      ),
+    );
+  }
+
+  SliverToBoxAdapter _buildProductGridView() {
+    return SliverToBoxAdapter(
+      child: BlocBuilder<DashboardBloc, DashboardState>(
+        builder: (context, state) {
+          if (state is DashboardLoading) {
+            return Wrap(
+              runSpacing: 16,
+              alignment: WrapAlignment.start,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: List.generate(10, (index) {
+                return DashboardProductCardSkelton();
+              }),
+            );
+          }
+          if (state is DashboardLoaded) {
+            return Wrap(
+              runSpacing: 16,
+              alignment: WrapAlignment.start,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: List.generate(state.products.length, (index) {
+                return DashboardProductCard(product: state.products[index]);
+              }),
+            );
+          }
+          return SizedBox();
+        },
+      ),
+    );
+  }
+
+  Widget _buildCartButton(BuildContext context) {
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        final hasItems = state is CartLoadedState && state.cartItems.isNotEmpty;
+
+        return AnimatedSwitcher(
+          duration: Duration(milliseconds: 300),
+          reverseDuration: Duration(milliseconds: 300),
+          switchInCurve: Curves.elasticOut,
+          switchOutCurve: Curves.easeInBack,
+          transitionBuilder: (child, animation) {
+            return ScaleTransition(
+              scale: animation,
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          child: hasItems
+              ? GestureDetector(
+                  key: ValueKey('cart_button_visible'),
+                  onTap: () => context.push(AppRoutes.cart),
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(16, 16, 16, 24),
+                    padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.blue,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(height: 36, width: 1, color: AppColors.white),
+                        hSpace8,
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Your Cart',
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(color: AppColors.white),
+                            ),
+                            Text(
+                              '${state.cartItems.length} item',
+                              style: Theme.of(context).textTheme.labelMedium
+                                  ?.copyWith(color: AppColors.lightGrey),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Iconify(Ep.right, color: AppColors.white),
+                      ],
+                    ),
+                  ),
+                )
+              : SizedBox(key: ValueKey('cart_button_hidden')),
+        );
+      },
     );
   }
 }
