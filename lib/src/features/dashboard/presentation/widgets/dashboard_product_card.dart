@@ -81,7 +81,7 @@ class DashboardProductCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               KRichText(
-                text1: '\$',
+                text1: '₹',
                 text2: '${product.price}',
                 text1Style: Theme.of(context).textTheme.titleMedium,
                 text2Style: TextStyle(fontSize: 20, color: AppColors.black),

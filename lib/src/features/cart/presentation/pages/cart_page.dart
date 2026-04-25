@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/line_md.dart';
 import 'package:zipmart/src/core/constants/app_constants.dart';
 import 'package:zipmart/src/core/styles/app_colors.dart';
 import 'package:zipmart/src/core/widgets/k_filled_button.dart';
+import 'package:zipmart/src/features/cart/presentation/bloc/cart/cart_bloc.dart';
+import 'package:zipmart/src/features/cart/presentation/widgets/cart_bill_detail_card.dart';
+import 'package:zipmart/src/features/cart/presentation/widgets/cart_product_card.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -25,8 +27,18 @@ class CartPage extends StatelessWidget {
 
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: [
-          Container(
+        children: [_buildCartSummary(context), vSpace16, CartBillDetailCard()],
+      ),
+
+      bottomNavigationBar: _buildDeliveryBar(context),
+    );
+  }
+
+  Widget _buildCartSummary(BuildContext context) {
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if (state is CartLoadedState) {
+          return Container(
             padding: EdgeInsets.all(12),
             color: AppColors.white,
             child: Column(
@@ -35,175 +47,58 @@ class CartPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '18 min',
+                      '21 min',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
-                      '3 item',
+                      '${state.cartItems.length} item',
                       style: Theme.of(
                         context,
                       ).textTheme.bodySmall?.copyWith(color: AppColors.grey),
                     ),
                   ],
                 ),
-
                 Divider(color: AppColors.lightGrey),
                 vSpace8,
 
-                // product cart
-                buildProductTile(context),
-                vSpace12,
-                buildProductTile(context),
-                vSpace12,
-                buildProductTile(context),
-              ],
-            ),
-          ),
-
-          vSpace16,
-
-          // Bill details
-          Container(
-            padding: EdgeInsets.all(12),
-            color: AppColors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Bill Details',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-
-                Divider(color: AppColors.lightGrey),
-                vSpace4,
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Item Total',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: AppColors.grey),
-                    ),
-                    Text(
-                      '\$180',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
-                ),
-                vSpace4,
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Delivery fee',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: AppColors.grey),
-                    ),
-                    Text('\$5', style: Theme.of(context).textTheme.titleMedium),
-                  ],
-                ),
-
-                Divider(color: AppColors.lightGrey),
-                vSpace4,
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'To Pay',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Text(
-                      '\$185',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: state.cartItems.length,
+                  separatorBuilder: (context, index) => vSpace12,
+                  itemBuilder: (context, index) {
+                    return CartProductCard(cartItem: state.cartItems[index]);
+                  },
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-
-      bottomNavigationBar: Container(
-        color: AppColors.white,
-        padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Deliver to:', style: Theme.of(context).textTheme.titleMedium),
-            Text(
-              'Kozhikode, Kerala, India:',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            vSpace12,
-            KFilledButton(text: 'Proceed to Pay', onPressed: () {}),
-          ],
-        ),
-      ),
+          );
+        }
+        return SizedBox();
+      },
     );
   }
 
-  Row buildProductTile(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          height: 60,
-          width: 60,
-          decoration: BoxDecoration(
-            color: AppColors.lightGrey,
-            borderRadius: BorderRadius.circular(8),
+  Widget _buildDeliveryBar(BuildContext context) {
+    return Container(
+      color: AppColors.white,
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Deliver to:', style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            'Kozhikode, Kerala, India',
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
-        ),
-        hSpace8,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Product title',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            Text('\$60.0', style: Theme.of(context).textTheme.titleMedium),
-          ],
-        ),
-        Spacer(),
-        Container(
-          height: 26,
-          decoration: BoxDecoration(
-            color: AppColors.lightGrey,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
-                child: Iconify(LineMd.minus, size: 16),
-              ),
-              AspectRatio(
-                aspectRatio: 1,
-                child: Container(
-                  color: AppColors.white,
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.fromLTRB(0, 2, 0, 2),
-                  child: Text('1'),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
-                child: Iconify(LineMd.plus, size: 16),
-              ),
-            ],
-          ),
-        ),
-      ],
+          vSpace12,
+          KFilledButton(text: 'Proceed to Pay', onPressed: () {}),
+        ],
+      ),
     );
   }
 }
