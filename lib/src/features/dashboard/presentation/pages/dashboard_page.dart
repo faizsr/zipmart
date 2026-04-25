@@ -86,38 +86,41 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Container buildCartButton(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(16, 16, 16, 24),
-      padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
-      decoration: BoxDecoration(
-        color: AppColors.blue,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Your Cart',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(color: AppColors.white),
-              ),
-              Text(
-                '1 item',
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: AppColors.white.withValues(alpha: 0.6),
+  Widget buildCartButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.push(AppRoutes.cart),
+      child: Container(
+        margin: EdgeInsets.fromLTRB(16, 16, 16, 24),
+        padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
+        decoration: BoxDecoration(
+          color: AppColors.blue,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Your Cart',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(color: AppColors.white),
                 ),
-              ),
-            ],
-          ),
+                Text(
+                  '1 item',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: AppColors.white.withValues(alpha: 0.6),
+                  ),
+                ),
+              ],
+            ),
 
-          Iconify(Ep.right, color: AppColors.white),
-        ],
+            Iconify(Ep.right, color: AppColors.white),
+          ],
+        ),
       ),
     );
   }
