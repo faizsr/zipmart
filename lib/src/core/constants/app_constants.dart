@@ -24,3 +24,6 @@ const hSpace28 = SizedBox(width: 28);
 const hSpace32 = SizedBox(width: 32);
 const hSpace40 = SizedBox(width: 40);
 
+const banner1 = 'https://i.pinimg.com/736x/41/73/94/41739469d7bcd1c486d151f69304dde1.jpg';
+const banner2 = 'https://i.pinimg.com/736x/41/a9/a9/41a9a9b46f91290d61934b7e75b5cd0c.jpg';
+const banner3 = 'https://i.pinimg.com/736x/c0/e1/d9/c0e1d9b539cd6aaf1e2740be080e92e0.jpg';

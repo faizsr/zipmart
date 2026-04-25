@@ -6,9 +6,12 @@ import 'package:zipmart/src/core/constants/app_constants.dart';
 import 'package:zipmart/src/core/styles/app_colors.dart';
 import 'package:zipmart/src/core/utils/responsive_helper.dart';
 import 'package:zipmart/src/core/widgets/k_rich_text.dart';
+import 'package:zipmart/src/features/dashboard/domain/entities/product_entity.dart';
 
 class DashboardProductCard extends StatelessWidget {
-  const DashboardProductCard({super.key});
+  const DashboardProductCard({super.key, required this.product});
+
+  final ProductEntity product;
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +41,27 @@ class DashboardProductCard extends StatelessWidget {
           AspectRatio(
             aspectRatio: 1,
             child: Container(
+              padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppColors.lightGrey,
                 borderRadius: BorderRadius.circular(12),
               ),
+              child: Image(image: NetworkImage(product.image)),
             ),
           ),
           vSpace12,
-          Text('Title', style: TextStyle(fontSize: 18)),
+          Text(
+            product.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 18),
+          ),
           Row(
             children: [
               Iconify(FaSolid.star, size: 14, color: Color(0xffFDCC0D)),
               hSpace4,
               Text(
-                '4.2 (238)',
+                '${product.ratingRate} (${product.ratingCount})',
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: AppColors.grey),
@@ -63,7 +73,7 @@ class DashboardProductCard extends StatelessWidget {
             children: [
               KRichText(
                 text1: '\$',
-                text2: '20',
+                text2: '${product.price}',
                 text1Style: Theme.of(context).textTheme.titleMedium,
                 text2Style: TextStyle(fontSize: 20, color: AppColors.black),
               ),
@@ -76,19 +86,19 @@ class DashboardProductCard extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
-                      child: Iconify(LineMd.minus, size: 16),
-                    ),
-                    AspectRatio(
-                      aspectRatio: 1,
-                      child: Container(
-                        color: AppColors.white,
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.fromLTRB(0, 2, 0, 2),
-                        child: Text('1'),
-                      ),
-                    ),
+                    // Container(
+                    //   padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
+                    //   child: Iconify(LineMd.minus, size: 16),
+                    // ),
+                    // AspectRatio(
+                    //   aspectRatio: 1,
+                    //   child: Container(
+                    //     color: AppColors.white,
+                    //     alignment: Alignment.center,
+                    //     margin: EdgeInsets.fromLTRB(0, 2, 0, 2),
+                    //     child: Text('1'),
+                    //   ),
+                    // ),
                     Container(
                       padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
                       child: Iconify(LineMd.plus, size: 16),

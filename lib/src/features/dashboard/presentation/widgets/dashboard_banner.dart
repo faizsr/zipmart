@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zipmart/src/core/constants/app_constants.dart';
 import 'package:zipmart/src/core/styles/app_colors.dart';
 import 'package:zipmart/src/core/utils/responsive_helper.dart';
 
@@ -7,6 +8,8 @@ class DashboardBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> bannerList = [banner1, banner2, banner3];
+
     bool isPhone = ResponsiveHelper.isPhone(context);
     bool isTablet = ResponsiveHelper.isTablet(context);
 
@@ -38,7 +41,13 @@ class DashboardBanner extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 children: List<Widget>.generate(3, (int index) {
-                  return Container(color: AppColors.lightGrey);
+                  return Container(
+                    color: AppColors.lightGrey,
+                    child: Image(
+                      image: NetworkImage(bannerList[index]),
+                      fit: BoxFit.cover,
+                    ),
+                  );
                 }),
               ),
             ),

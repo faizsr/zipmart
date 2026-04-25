@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/gg.dart';
 import 'package:zipmart/src/core/constants/app_constants.dart';
 import 'package:zipmart/src/core/constants/app_icons.dart';
 import 'package:zipmart/src/core/styles/app_colors.dart';
+import 'package:zipmart/src/core/utils/extensions.dart';
 import 'package:zipmart/src/core/widgets/k_rich_text.dart';
+import 'package:zipmart/src/features/dashboard/presentation/bloc/dashboard/dashboard_bloc.dart';
 
 class DashboardHeader extends StatefulWidget {
   const DashboardHeader({super.key});
@@ -15,6 +18,12 @@ class DashboardHeader extends StatefulWidget {
 }
 
 class _DashboardHeaderState extends State<DashboardHeader> {
+  List<String> categoryIcons = [
+    AppIcons.electronics,
+    AppIcons.jewelery,
+    AppIcons.mensFashion,
+    AppIcons.womensFashion,
+  ];
   Color foregroundColor = AppColors.white;
   Color backgroundColor = AppColors.blue;
   String selectedCategory = 'All';
@@ -123,24 +132,23 @@ class _DashboardHeaderState extends State<DashboardHeader> {
             SingleChildScrollView(
               padding: EdgeInsets.fromLTRB(8, 0, 8, 16),
               scrollDirection: Axis.horizontal,
-              child: Row(
-                spacing: 16,
-                children: [
-                  buildCategoryCard(icon: Gg.shopping_bag, title: 'All'),
-                  buildCategoryCard(
-                    icon: AppIcons.electronics,
-                    title: 'Electronics',
-                  ),
-                  buildCategoryCard(icon: AppIcons.jewelery, title: 'Jewelery'),
-                  buildCategoryCard(
-                    icon: AppIcons.mensFashion,
-                    title: 'Mens Fashion',
-                  ),
-                  buildCategoryCard(
-                    icon: AppIcons.womensFashion,
-                    title: 'Womens Fashion',
-                  ),
-                ],
+              child: BlocBuilder<DashboardBloc, DashboardState>(
+                builder: (context, state) {
+                  return Row(
+                    spacing: 16,
+                    children: [
+                      buildCategoryCard(icon: Gg.shopping_bag, title: 'All'),
+                      if (state is DashboardLoaded) ...[
+                        ...List.generate(state.categories.length, (index) {
+                          return buildCategoryCard(
+                            icon: categoryIcons[index],
+                            title: state.categories[index].capitalize(),
+                          );
+                        }),
+                      ],
+                    ],
+                  );
+                },
               ),
             ),
           ],
